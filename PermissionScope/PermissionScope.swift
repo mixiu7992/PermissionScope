@@ -100,6 +100,8 @@ typealias resultsForConfigClosure     = ([PermissionResult]) -> Void
     /// Called when the user has disabled or denied access to notifications, and we're presenting them with a help dialog.
     public var onDisabledOrDenied: cancelClosureType? = nil
 	/// View controller to be used when presenting alerts. Defaults to self. You'll want to set this if you are calling the `request*` methods directly.
+    /// when show alert click ok button
+    public var onAlertClickOK: cancelClosureType? = nil
 	public var viewControllerForAlerts : UIViewController?
 
     /**
@@ -1147,7 +1149,13 @@ typealias resultsForConfigClosure     = ([PermissionResult]) -> Void
             preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK".localized,
             style: .cancel,
-            handler: nil))
+            handler: { _ in
+                if let onAlertClickOK = self.onAlertClickOK {
+                    self.getResultsForConfig({ results in
+                        onAlertClickOK(results)
+                    })
+                }
+        }))
         alert.addAction(UIAlertAction(title: "Show me".localized,
             style: .default,
             handler: { action in
@@ -1181,7 +1189,13 @@ typealias resultsForConfigClosure     = ([PermissionResult]) -> Void
             preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK".localized,
             style: .cancel,
-            handler: nil))
+            handler: { _ in
+                if let onAlertClickOK = self.onAlertClickOK {
+                    self.getResultsForConfig({ results in
+                        onAlertClickOK(results)
+                    })
+                }
+        }))
         alert.addAction(UIAlertAction(title: "Show me".localized,
             style: .default,
             handler: { action in
